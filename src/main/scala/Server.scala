@@ -10,20 +10,16 @@ object Server extends App {
   val host = "0.0.0.0"
   val port = 9000
   implicit val system: ActorSystem = ActorSystem("helloworld")
-
-  //Changed system.dispatcherimplicit to system.dispatcher
   implicit val executor: ExecutionContext = system.dispatcher
-  val materializer: ActorMaterializer = ActorMaterializer()
+  implicit val materializer: ActorMaterializer = ActorMaterializer()
 
-  val route =
+  def route =
     path("hello") {
       get {
         complete("Hello, world!")
       }
     }
 
-
-  //Type mismatch on route
   val bindingFuture = Http().bindAndHandle(route, host, port)
 
 }
