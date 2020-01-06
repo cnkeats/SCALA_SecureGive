@@ -1,19 +1,29 @@
 package main.scala
+import akka.actor.ActorSystem
+import akka.http.scaladsl.Http
+import akka.stream.ActorMaterializer
+import akka.http.scaladsl.server.Directives._
+import scala.concurrent.ExecutionContext
 
 object Server extends App {
 
   val host = "0.0.0.0"
   val port = 9000
   implicit val system: ActorSystem = ActorSystem("helloworld")
-  implicit val executor: ExecutionContext = system.dispatcherimplicit
+
+  //Changed system.dispatcherimplicit to system.dispatcher
+  implicit val executor: ExecutionContext = system.dispatcher
   val materializer: ActorMaterializer = ActorMaterializer()
 
-  def route = path("hello") {
-    get {
-      complete("Hello, World!")
+  val route =
+    path("hello") {
+      get {
+        complete("Hello, world!")
+      }
     }
-  }
 
-  Http().bindAndHandle(route, host, port)
+
+  //Type mismatch on route
+  val bindingFuture = Http().bindAndHandle(route, host, port)
 
 }
